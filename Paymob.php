@@ -104,6 +104,7 @@ class Paymob
     }
 
 
+
     /**
      *
      *
@@ -113,13 +114,17 @@ class Paymob
 
     public function Url_Card_toIftame_ToPay($id_iframes)
     {
-
-
-        return "https://accept.paymob.com/api/acceptance/iframes/$id_iframes?payment_token=$this->Payment_Key_Request";
+        return ("https://accept.paymob.com/api/acceptance/iframes/$id_iframes?payment_token=$this->Payment_Key_Request");
     }
 
 
-    public function Wallet()
+
+
+
+    
+
+
+     public function Wallet($phone_number)
     {
 
         $Payment_Key_Request = $this->Payment_Key_Request;
@@ -127,15 +132,15 @@ class Paymob
         $data_wallet = [
 
             "source" => [
-                "identifier" => "wallet mobile number",
+                "identifier" => $phone_number,
                 "subtype" => "WALLET"
             ],
-            "payment_token" => "$Payment_Key_Request"  // token obtained in step 3
+            "payment_token" => $Payment_Key_Request  // token obtained in step 3
         ];
 
         $response = Http::asJson()->withHeaders([
             'Content-Type' => 'application/json'
         ])->post('https://accept.paymob.com/api/acceptance/payments/pay', $data_wallet);
-        return $response;
+        return $response->json()['iframe_redirection_url'];
     }
 }
